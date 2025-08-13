@@ -1,1 +1,131 @@
 
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard do Bot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos CSS */
+        body {
+            /* Fundo preto sólido */
+            background-color: #000;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: flex-start;
+            width: 100%;
+            padding-bottom: 50px;
+        }
+
+        .logo-container {
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+            position: relative;
+            transition: transform 0.5s ease-out;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+        .logo {
+            width: 150px;
+            height: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .content-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .dashboard-info {
+            background-color: rgba(26, 26, 26, 0.7);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            animation: fadeInContent 2s 1s forwards;
+            border: 1px solid rgba(138, 43, 226, 0.5);
+            backdrop-filter: blur(5px);
+            max-width: 600px;
+            text-align: center;
+        }
+
+        @keyframes fadeInContent {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #8a2be2;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        p {
+            line-height: 1.6;
+        }
+
+        .download-button {
+            background-color: #8a2be2;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .download-button:hover {
+            background-color: #6c18a4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo-container">
+            <img src="logo.png" alt="Logo do Bot" class="logo">
+        </div>
+    </div>
+
+    <div class="content-container">
+        <div class="dashboard-info">
+            <h1>Projeto do Meu Bot</h1>
+            <p>Aqui você encontrará informações sobre o meu incrível bot. Este dashboard foi criado para apresentar de forma interativa as funcionalidades e o progresso do projeto.</p>
+            <a href="#" class="download-button" download="projeto_bot.zip">Download do Projeto</a>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript para o efeito de paralaxe do logo
+        const logo = document.querySelector('.logo-container');
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX) / 50;
+            const y = (e.clientY) / 50;
+            logo.style.transform = `translate(${x}px, ${y}px)`;
+        });
+    </script>
+</body>
+</html>
