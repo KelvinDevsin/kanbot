@@ -41,11 +41,6 @@
             transform: translateY(100vh);
         }
 
-        .page-3 {
-            background-image: url('puxador.png'); /* Você pode mudar para uma imagem diferente */
-            transform: translateY(200vh);
-        }
-
         .page::before {
             content: '';
             position: absolute;
@@ -162,18 +157,6 @@
         </div>
     </div>
 
-    <div class="page page-3">
-        <div class="content">
-            <h1>Criar Nova Conta</h1>
-            <form id="registration-form">
-                <input type="email" id="reg-email" placeholder="Seu Email" required>
-                <input type="password" id="reg-password" placeholder="Sua Senha" required>
-                <button type="submit" class="download-button">Cadastrar</button>
-            </form>
-            <p id="registration-message"></p>
-        </div>
-    </div>
-
     <script>
         // JavaScript para o efeito de paralaxe do logo
         const logo = document.querySelector('.logo-container');
@@ -183,7 +166,7 @@
             logo.style.transform = `translate(${x}px, ${y}px)`;
         });
 
-        // JavaScript para o efeito de digitação nas duas primeiras páginas
+        // JavaScript para o efeito de digitação nas duas páginas
         const titleText1 = "Puxador de contas que fizeram a ultima ação";
         const descriptionText1 = "coloque a descrição aqui";
         const titleText2 = "Excluidor de contas";
@@ -194,6 +177,7 @@
         const titleElement2 = document.getElementById("title-text-2");
         const descriptionElement2 = document.getElementById("description-text-2");
 
+        // Variáveis para controlar os intervalos de digitação
         let titleTypingInterval;
         let descriptionTypingInterval;
 
@@ -204,7 +188,7 @@
             element.style.overflow = "hidden";
             element.style.borderRight = ".15em solid #fff";
             
-            clearInterval(titleTypingInterval);
+            clearInterval(titleTypingInterval); // Limpa o intervalo anterior
             titleTypingInterval = setInterval(() => {
                 if (i < text.length) {
                     element.innerHTML += text.charAt(i);
@@ -227,7 +211,7 @@
             element.style.overflow = "hidden";
             element.style.borderRight = ".15em solid #ccc";
             
-            clearInterval(descriptionTypingInterval);
+            clearInterval(descriptionTypingInterval); // Limpa o intervalo anterior
             descriptionTypingInterval = setInterval(() => {
                 if (j < text.length) {
                     element.innerHTML += text.charAt(j);
@@ -246,7 +230,7 @@
         let isScrolling = false;
         
         document.addEventListener('wheel', (e) => {
-            e.preventDefault();
+            e.preventDefault(); // Impede a rolagem padrão da página
             if (isScrolling) return;
 
             const delta = e.deltaY;
@@ -260,7 +244,37 @@
             }
 
             scrollToPage(currentPage);
-        }, { passive: false });
+        }, { passive: false }); // Permite o uso de e.preventDefault()
+
+        // Adiciona suporte a eventos de toque para dispositivos móveis
+        let touchStartY = 0;
+        let touchEndY = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        document.addEventListener('touchmove', (e) => {
+            touchEndY = e.touches[0].clientY;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            if (isScrolling) return;
+
+            const deltaY = touchStartY - touchEndY;
+
+            if (Math.abs(deltaY) > 50) { // Verifica se o deslize foi significativo
+                if (deltaY > 0 && currentPage < pages.length - 1) { // Deslize para cima
+                    isScrolling = true;
+                    currentPage++;
+                } else if (deltaY < 0 && currentPage > 0) { // Deslize para baixo
+                    isScrolling = true;
+                    currentPage--;
+                }
+                scrollToPage(currentPage);
+            }
+        }, { passive: true });
+
 
         function scrollToPage(pageIndex) {
             pages.forEach((page, index) => {
@@ -273,6 +287,7 @@
                 }
             });
 
+            // Limpa os intervalos de digitação para evitar bugs
             clearInterval(titleTypingInterval);
             clearInterval(descriptionTypingInterval);
             
@@ -281,9 +296,6 @@
             descriptionElement1.innerHTML = "";
             titleElement2.innerHTML = "";
             descriptionElement2.innerHTML = "";
-            document.querySelector(".page-3 h1").innerHTML = "Criar Nova Conta"; // Garante que o título do formulário não seja apagado
-            document.getElementById("registration-message").innerHTML = "";
-
 
             setTimeout(() => {
                 isScrolling = false;
@@ -293,7 +305,6 @@
                 } else if (pageIndex === 1) {
                     typeTitle(titleElement2, titleText2, () => typeDescription(descriptionElement2, descriptionText2));
                 }
-                // Não há animação de digitação na página 3, mas o scroll irá para lá.
             }, 800);
         }
 
@@ -302,44 +313,6 @@
             setTimeout(() => {
                 typeTitle(titleElement1, titleText1, () => typeDescription(descriptionElement1, descriptionText1));
             }, 2000);
-
-            // Código para o formulário de registro
-            const registrationForm = document.getElementById('registration-form');
-            const registrationMessage = document.getElementById('registration-message');
-            const appScriptUrl = 'https://script.google.com/macros/s/AKfycbw-6lUpxesTyeVEtqrcb-v2HH2Bx0mW7EF86WSmKHUjShjDSvoOhveL2i0MXd4tMUZl/exec';
-
-            if (registrationForm) {
-                registrationForm.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-
-                    const email = document.getElementById('reg-email').value;
-                    const password = document.getElementById('reg-password').value;
-
-                    try {
-                        const response = await fetch(appScriptUrl, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ email, password }),
-                        });
-
-                        const result = await response.json();
-
-                        if (result.success) {
-                            registrationMessage.style.color = '#28a745';
-                            registrationMessage.innerText = 'Cadastro realizado com sucesso!';
-                            registrationForm.reset();
-                        } else {
-                            registrationMessage.style.color = '#dc3545';
-                            registrationMessage.innerText = `Erro no cadastro: ${result.message}`;
-                        }
-                    } catch (error) {
-                        registrationMessage.style.color = '#dc3545';
-                        registrationMessage.innerText = 'Erro ao se conectar com o servidor.';
-                    }
-                });
-            }
         });
     </script>
 </body>
